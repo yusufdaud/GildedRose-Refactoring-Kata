@@ -2,14 +2,12 @@ package com.gildedrose;
 
 import org.junit.jupiter.api.Test;
 
+import static com.gildedrose.GildedRose.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GildedRoseTest {
 
     public static final String GENERICITEM = "genericitem";
-    public static final String AGED_BRIE = "Aged Brie";
-    public static final String BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert";
-    public static final String SULFURAS = "Sulfuras, Hand of Ragnaros";
 
     @Test
     void qualityIsNeverNegative(){
@@ -164,6 +162,35 @@ class GildedRoseTest {
         assertEquals(-2, app.items[0].sellIn);
     }
 
+    @Test
+    void conjuredQualityDegradesByTwoBeforeSellBy(){
+        Item[] items = new Item[] { new Item(CONJURED, 15, 10) };
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+        assertEquals(8, app.items[0].quality);
+        assertEquals(14, app.items[0].sellIn);
+        app.updateQuality();
+        assertEquals(6, app.items[0].quality);
+        assertEquals(13, app.items[0].sellIn);
+    }
+
+    @Test
+    void conjuredQualityDegradesByFourAfterSellBy(){
+        Item[] items = new Item[] { new Item(CONJURED, 1, 10) };
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+        assertEquals(8, app.items[0].quality);
+        assertEquals(0, app.items[0].sellIn);
+        app.updateQuality();
+        assertEquals(4, app.items[0].quality);
+        assertEquals(-1, app.items[0].sellIn);
+        app.updateQuality();
+        assertEquals(0, app.items[0].quality);
+        assertEquals(-2, app.items[0].sellIn);
+        app.updateQuality();
+        assertEquals(0, app.items[0].quality);
+        assertEquals(-3, app.items[0].sellIn);
+    }
 
 
 
